@@ -6,6 +6,6 @@ use duckdb::ffi::duckdb_database;
 /// # Safety
 /// .
 #[no_mangle]
-pub unsafe extern "C" fn deltatable_init_rust(db: *mut c_void) {
+pub unsafe extern "C" fn iceberg_init_rust(db: *mut c_void) {
     let _db = db as duckdb_database;
 }
