@@ -1,12 +1,14 @@
 #define DUCKDB_EXTENSION_MAIN
 
-#inlcude "iceberg.hpp"
-#include "iceberg_extension.hpp"
+#include "iceberg.hpp"
+
+const char* iceberg_version_rust(void);
+void iceberg_init_rust(duckdb::DatabaseInstance* db);
 
 namespace duckdb {
 
 void IcebergExtension::Load(DuckDB &db) {
-	iceberg_init_rust(*db.instance);
+	iceberg_init_rust(db.instance.get());
 }
 std::string IcebergExtension::Name() {
 	return "iceberg";
@@ -14,9 +16,11 @@ std::string IcebergExtension::Name() {
 
 } // namespace duckdb
 
+extern "C" void duckdb_web_iceberg_init(duckdb::DuckDB* db) { db->LoadExtension<duckdb::IcebergExtension>(); }
+
 extern "C" {
 
-DUCKDB_EXTENSION_API void iceberg_init(duckdb::DatabaseInstance &db) {
+DUCKDB_EXTENSION_API void iceberg_init(duckdb::DatabaseInstance* db) {
 	iceberg_init_rust(db);
 }
 
